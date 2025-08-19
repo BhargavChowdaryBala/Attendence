@@ -1,7 +1,6 @@
 import streamlit as st
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from pyzbar.pyzbar import decode
 import cv2
 import numpy as np
 from PIL import Image
@@ -30,12 +29,13 @@ def mark_attendance(roll_number):
     return False, None
 
 
-# ✅ QR decoding from image
+# ✅ QR decoding from image (OpenCV version)
 def scan_qr_from_image(img):
     img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-    decoded_objects = decode(img)
-    if decoded_objects:
-        return decoded_objects[0].data.decode("utf-8")
+    detector = cv2.QRCodeDetector()
+    data, bbox, _ = detector.detectAndDecode(img)
+    if data:
+        return data
     return None
 
 
