@@ -4,11 +4,14 @@ from oauth2client.service_account import ServiceAccountCredentials
 import cv2
 import numpy as np
 from PIL import Image
+import json
 
 # Google Sheets setup
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-SERVICE_ACCOUNT_FILE = "service_account.json"  # your service account key file
-creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
+
+# ✅ Load service account from Streamlit Secrets
+creds_dict = json.loads(st.secrets["gcp_service_account"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 # Open your sheet
